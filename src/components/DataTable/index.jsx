@@ -72,7 +72,9 @@ export function DataTable({ setStatus }) {
                     {rows.map((r, i) => (
                         <tr key={`row-${i}`}>
                             {r.map((rx, i2) => (
-                                <td key={`entry-${i2}`} data-target={`${i}-${i2}`} >{rx}</td>
+                                <td key={`entry-${i2}`} data-target={`${i}-${i2}`} >
+                                    <input type="text" value={rx} />
+                                </td>
                             ))}
                         </tr>
                     ))}
