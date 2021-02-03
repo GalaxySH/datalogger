@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
+body {
+    font-family: "Roboto";
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+header {
+    background-color: black;
+    height: 55px;
+    color: #fff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header-title {
+    font-size: 2rem;
+    line-height: 1.7;
+    text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.data-table {
+    /*border: solid 2px black;*/
+    border-collapse: collapse;
 }
 
-.App-link {
-  color: #61dafb;
+.data-table td, .data-table th {
+    border: solid 1px black;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.data-table thead {
+    border-bottom: solid 2px black;
+}
+
+.data-table input {
+    border: none;
+}
+
+.field-alert {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+}
+
+.field-success {
+    color: rgb(41, 173, 41);
+    background-color: rgba(0,200,0,0.4);
+}
+
+.field-error {
+    color: red;
+    background-color: rgba(200,0,0,0.4);
+}
+
+.adder-box {
+    padding: 5px;
+    border: 1px solid black;
+    margin: auto;
+    width: 40%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.adder-box input {
+    margin-right: 10px;
+    width: 35px;
 }
