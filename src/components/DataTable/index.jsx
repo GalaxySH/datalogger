@@ -3,8 +3,8 @@ import React from 'react';
 export function DataTable({ setStatus }) {
     const [rows, setRows] = React.useState([]);
     const [variables, setVariables] = React.useState(["x", "y"]);
-    const [ar1, setAr1] = React.useState(undefined);
-    const [ar2, setAr2] = React.useState(undefined);
+    const [ar1, setAr1] = React.useState("");
+    const [ar2, setAr2] = React.useState("");
 
     const updateVars = (e) => {
         //setRows(...rows, event.target.message)
@@ -34,12 +34,13 @@ export function DataTable({ setStatus }) {
             setStatus({msg: "Variable value not a number", success: false});
             return;
         }
-        const v = parseInt(e.target.value, 10);
+        //const v = parseInt(e.target.value, 10);
+        const v = e.target.value;
         if (e.target.attributes["data-target"].value === "0") {
-            setAr1(e.target.value);
+            setAr1(v);
         }
         if (e.target.attributes["data-target"].value === "1") {
-            setAr2(e.target.value);
+            setAr2(v);
         }
         setStatus({msg: "", success: true});
     }
@@ -59,6 +60,33 @@ export function DataTable({ setStatus }) {
 
     const handleInputFocus = (event) => event.target.select();
 
+    const setEntryChange = (row, entry, value) => {
+        const rs = rows.slice();
+        if (rs.length && rs[row] && rs[row][entry]) {
+            rs[row][entry] = value;
+        }
+        setRows(rs);
+    }
+
+    const handleEntryChange = (e) => {
+        if (!e.target.value) {
+            setStatus({msg: "Entry value cannot be null", success: false});
+            return;
+        }
+        if (!/^\d+$/.test(e.target.value)) {
+            setStatus({msg: "Entry value must be a number", success: false});
+            return;
+        }
+        //const v = parseInt(e.target.value, 10);
+        const v = e.target.value;
+        if (e.target.attributes["data-target"].value.split("-").length !== 2) {
+            setStatus({msg: "No target", success: false});
+            return;
+        }
+        const t = e.target.attributes["data-target"].value.split("-");
+        setEntryChange(t[0], t[1], v);
+    }
+
     return (
         <section>
             <table className="data-table" style={{border: "solid 2px black", margin: "auto", marginTop: 20, marginBottom: 20}}>
@@ -72,8 +100,8 @@ export function DataTable({ setStatus }) {
                     {rows.map((r, i) => (
                         <tr key={`row-${i}`}>
                             {r.map((rx, i2) => (
-                                <td key={`entry-${i2}`} data-target={`${i}-${i2}`} >
-                                    <input type="text" value={rx} />
+                                <td key={`entry-${i2}`} >
+                                    <input type="text" value={rx} data-target={`${i}-${i2}`} onChange={handleEntryChange} />
                                 </td>
                             ))}
                         </tr>
@@ -83,11 +111,11 @@ export function DataTable({ setStatus }) {
             <div className="adder-box">
                 <div>
                     <label htmlFor={variables[0]} style={{marginRight: 5}}>{variables[0]}</label>
-                    <input data-target={`0`} type="text" name={variables[0]} placeholder={variables[0]} onChange={arChange} value={ar1}/>
+                    <input data-target={`0`} type="text" name={variables[0]} placeholder={variables[0]} onChange={arChange} value={ar1} />
                 </div>
                 <div>
                     <label htmlFor={variables[1]} style={{marginRight: 5}}>{variables[1]}</label>
-                    <input data-target={`1`} type="text" name={variables[1]} placeholder={variables[1]} onChange={arChange} value={ar2}/>
+                    <input data-target={`1`} type="text" name={variables[1]} placeholder={variables[1]} onChange={arChange} value={ar2} />
                 </div>
                 <button id="data-input-button" onClick={handleAddClick}>
                     Add Row

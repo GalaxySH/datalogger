@@ -5,7 +5,7 @@ export function Header(props) {
     return (
         <header className='header'>
             <div className="header-title">
-                Data Logging Utility
+                Data Utility
             </div>
         </header>
     )
