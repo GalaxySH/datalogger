@@ -14,21 +14,85 @@ header {
     text-align: center;
 }
 
-.data-table {
-    /*border: solid 2px black;*/
-    border-collapse: collapse;
+.main {
+    position: relative;
 }
 
-.data-table td, .data-table th {
-    border: solid 1px black;
+.table-wrap {
+    width: 100%;
+    overflow: auto;
+}
+
+.data-table {
+    width: 390px;
+    position: relative;
+    /*border: solid 2px black;*/
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.data-table th {
+    border-right: solid 2px black;
+    border-top: solid 2px black;
+    border-bottom: solid 1px black;
+}
+
+.data-table tbody tr {
+    border-top: solid 1px black;
+}
+
+.data-table td {
+    border-right: solid 1px black;
+}
+
+.data-table td:first-child {
+    border-top: none;
 }
 
 .data-table thead {
-    border-bottom: solid 2px black;
+    display: block;
+}
+
+.data-table tbody {
+    display: block;
+    max-height: 180px;
+    overflow-y: auto;
+    border-right: solid 1px black;
 }
 
 .data-table input {
     border: none;
+}
+
+.data-row {
+    position: relative;
+}
+
+.delrow {
+    visibility: hidden;
+    position: absolute;
+    top: 3px;
+    right: 2px;
+    height: 17px;
+    width: 17px;
+    font-size: 0.8em;
+    background-color: darkred;
+    border: none;
+    border-radius: 50em;
+}
+
+.delrow::after {
+    font-size: 0.8em;
+    content: "🗑️";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+
+.data-row:hover .delrow {
+    visibility: visible;
 }
 
 .field-alert {
@@ -57,9 +121,34 @@ header {
     margin: auto;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .adder-box input {
     margin-right: 10px;
     width: 35px;
+}
+
+.graph {
+    border-top: 1px solid black;
+    margin-top: 15px;
+}
+
+@media screen and (max-width: 700px) {
+    .adder-box {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .adder-box {
+        width: 96%;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .adder-box {
+        /*display: block;*/
+        flex-direction: column;
+    }
 }

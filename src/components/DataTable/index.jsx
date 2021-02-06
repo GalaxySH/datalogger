@@ -1,10 +1,41 @@
 import React from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
-export function DataTable({ setStatus }) {
-    const [rows, setRows] = React.useState([]);
-    const [variables, setVariables] = React.useState(["x", "y"]);
+export function DataTable({ setStatus,rows, setRows, variables, setVariables }) {
     const [ar1, setAr1] = React.useState("");
     const [ar2, setAr2] = React.useState("");
+    const [title] = React.useState({
+        title: {
+            text: "Data Graph"
+        }
+    });
+    const [series, setSeries] = React.useState({
+        series: [{
+            name: "Tabled Data",
+            data: []
+        }]
+    });
+    const [xAxis, setXAxis] = React.useState({
+        xAxis: {
+            title: {
+                text: "x"
+            }
+        }
+    });
+    const [yAxis, setYAxis] = React.useState({
+        yAxis: {
+            title: {
+                text: "y"
+            }
+        }
+    });
+    /*const [chart, setChart] = React.useState(Object.assign(title, series, xAxis, yAxis));
+    React.useEffect(() => {
+        setChart(Object.assign(title, series, xAxis, yAxis))
+        console.log("charted: ", JSON.stringify(chart))
+    }, [title, series, xAxis, yAxis, chart]);*/
+    const ar1Ref = React.useRef();
 
     const updateVars = (e) => {
         //setRows(...rows, event.target.message)
@@ -12,14 +43,29 @@ export function DataTable({ setStatus }) {
 
         if (!e.target.value || !e.target.attributes["data-target"]) {
             setStatus({msg: "Variable cannot be empty", success: false});
-            return;
+            //return;
+            e.target.value = "v";
         }
         const vars = variables.slice();
         if (e.target.attributes["data-target"].value === "var1") {
             vars[0] = e.target.value;
+            setXAxis({
+                xAxis: {
+                    title: {
+                        text: e.target.value
+                    }
+                }
+            })
         }
         if (e.target.attributes["data-target"].value === "var2") {
             vars[1] = e.target.value;
+            setYAxis({
+                yAxis: {
+                    title: {
+                        text: e.target.value
+                    }
+                }
+            })
         }
         setVariables(vars);
         setStatus({msg: "", success: true});
@@ -27,10 +73,17 @@ export function DataTable({ setStatus }) {
 
     const arChange = (e) => {
         if (!e.target.value) {
-            setStatus({msg: "No data provided", success: false});
+            //setStatus({msg: "No data provided", success: false});
+            const v = e.target.value;
+            if (e.target.attributes["data-target"].value === "0") {
+                setAr1(v);
+            }
+            if (e.target.attributes["data-target"].value === "1") {
+                setAr2(v);
+            }
             return;
         }
-        if (!/^\d+$/.test(e.target.value)) {
+        if (!/^-?\d+$/.test(e.target.value)) {
             setStatus({msg: "Variable value not a number", success: false});
             return;
         }
@@ -56,6 +109,20 @@ export function DataTable({ setStatus }) {
         setAr2("");
         setRows(rs);
         setStatus({msg: "Row added", success: true});
+
+        ar1Ref.current && ar1Ref.current.focus();
+        
+        const mappedrs = rs.map(x => {
+            return x.map(x1 => parseInt(x1, 10));
+        })
+        setTimeout(() => {
+            setSeries({
+                series: [{
+                    name: "Tabled Data",
+                    data: [...mappedrs]
+                }]
+            })
+        }, 500)
     }
 
     const handleInputFocus = (event) => event.target.select();
@@ -66,6 +133,18 @@ export function DataTable({ setStatus }) {
             rs[row][entry] = value;
         }
         setRows(rs);
+        const mappedrs = rs.map(x => {
+            return x.map(x1 => parseInt(x1, 10));
+        })
+        setStatus({msg: "", success: true});
+        setTimeout(() => {
+            setSeries({
+                series: [{
+                    name: "Tabled Data",
+                    data: [...mappedrs]
+                }]
+            })
+        }, 200)
     }
 
     const handleEntryChange = (e) => {
@@ -73,7 +152,7 @@ export function DataTable({ setStatus }) {
             setStatus({msg: "Entry value cannot be null", success: false});
             return;
         }
-        if (!/^\d+$/.test(e.target.value)) {
+        if (!/^-?\d+$/.test(e.target.value)) {
             setStatus({msg: "Entry value must be a number", success: false});
             return;
         }
@@ -87,40 +166,63 @@ export function DataTable({ setStatus }) {
         setEntryChange(t[0], t[1], v);
     }
 
+    const addRowKeyPressed = (e) => {
+        const code = e.keyCode || e.which;
+        if (code === 13) {
+            handleAddClick();
+        }
+    }
+
     return (
-        <section>
-            <table className="data-table" style={{border: "solid 2px black", margin: "auto", marginTop: 20, marginBottom: 20}}>
-                <thead style={{border: "solid 2px black"}}>
-                    <tr>
-                        <th><input data-target="var1" type="text" name={variables[0]} placeholder="Variable Name" value={variables[0]} onChange={updateVars} onFocus={handleInputFocus} /></th>
-                        <th><input data-target="var2" type="text" name={variables[1]} placeholder="Variable Name" value={variables[1]} onChange={updateVars} onFocus={handleInputFocus} /></th>
-                    </tr>
-                </thead>
-                <tbody style={{border: "solid 2px black"}}>
-                    {rows.map((r, i) => (
-                        <tr key={`row-${i}`}>
-                            {r.map((rx, i2) => (
-                                <td key={`entry-${i2}`} >
-                                    <input type="text" value={rx} data-target={`${i}-${i2}`} onChange={handleEntryChange} />
-                                </td>
+        <main>
+            <section>
+                <div className="table-wrap">
+                    <table id="data-table" className="data-table" style={{margin: "auto", marginTop: 20, marginBottom: 20}}>
+                        <thead>
+                            <tr>
+                                <th><input data-target="var1" type="text" name={variables[0]} placeholder="Variable Name" value={variables[0]} onChange={updateVars} onFocus={handleInputFocus} /></th>
+                                <th><input data-target="var2" type="text" name={variables[1]} placeholder="Variable Name" value={variables[1]} onChange={updateVars} onFocus={handleInputFocus} /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {!rows.length ? (
+                                <tr>
+                                    <td colSpan="2" style={{padding: 5, textAlign: "center", width: 390}}>Nothing here yet</td>
+                                </tr>
+                            ) : ""}
+                            {rows.sort(([a,], [b,]) => a - b).map((r, i) => (
+                                <tr key={`row-${i}`}>
+                                    {r.map((rx, i2) => (
+                                        <td className="data-row" key={`entry-${i2}`} >
+                                            <input type="text" value={rx} data-target={`${i}-${i2}`} onChange={handleEntryChange} />
+                                            <button className="delrow"></button>
+                                        </td>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="adder-box">
-                <div>
-                    <label htmlFor={variables[0]} style={{marginRight: 5}}>{variables[0]}</label>
-                    <input data-target={`0`} type="text" name={variables[0]} placeholder={variables[0]} onChange={arChange} value={ar1} />
+                        </tbody>
+                    </table>
                 </div>
-                <div>
-                    <label htmlFor={variables[1]} style={{marginRight: 5}}>{variables[1]}</label>
-                    <input data-target={`1`} type="text" name={variables[1]} placeholder={variables[1]} onChange={arChange} value={ar2} />
+                <div className="adder-box">
+                    <div>
+                        <label htmlFor={variables[0]} style={{marginRight: 5}}>{variables[0]}</label>
+                        <input data-target={`0`} type="text" name={variables[0]} placeholder={variables[0]} onChange={arChange} value={ar1} onKeyPress={addRowKeyPressed} ref={ar1Ref} />
+                    </div>
+                    <div>
+                        <label htmlFor={variables[1]} style={{marginRight: 5}}>{variables[1]}</label>
+                        <input data-target={`1`} type="text" name={variables[1]} placeholder={variables[1]} onChange={arChange} value={ar2} onKeyPress={addRowKeyPressed} />
+                    </div>
+                    <button id="data-input-button" onClick={handleAddClick}>
+                        Add Row
+                    </button>
                 </div>
-                <button id="data-input-button" onClick={handleAddClick}>
-                    Add Row
-                </button>
-            </div>
-        </section>
+            </section>
+            <section className="graph">
+                <HighchartsReact 
+                    highcharts={Highcharts}
+                    options={{title: title.title, series: series.series, xAxis: xAxis.xAxis, yAxis: yAxis.yAxis}}
+                />
+            </section>
+        </main>
     )
 }
