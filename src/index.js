@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 ReactDOM.render(
   <React.StrictMode>
     <Helmet>
-      <title>Data Logging Utility</title>
       <meta name="description" content="Made by Stefan Hauge"></meta>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     </Helmet>
