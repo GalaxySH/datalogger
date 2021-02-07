@@ -1,5 +1,10 @@
-body {
-    font-family: "Roboto";
+/*body {
+    font-family: Arial, Helvetica, sans-serif;
+}*/
+
+html, body {
+    width: 100%;
+    height: 100%;
 }
 
 header {
@@ -10,7 +15,7 @@ header {
 
 .header-title {
     font-size: 2rem;
-    line-height: 1.7;
+    line-height: 1.6;
     text-align: center;
 }
 
@@ -33,37 +38,61 @@ header {
     border-bottom: 2px solid black;
 }
 
-.data-table th {
-    border-right: solid 2px black;
-    border-top: solid 2px black;
-    border-bottom: solid 1px black;
-}
-
-.data-table tbody tr {
-    border-top: solid 1px black;
-}
-
-.data-table td {
+.data-table tbody {
+    display: block;
+    max-height: 180px;
     border-right: solid 1px black;
+    overflow-y: auto;
+    scrollbar-width: none;
+    width: 390px;
 }
 
-.data-table td:first-child {
-    border-top: none;
+.data-table tbody::-webkit-scrollbar {
+    width: 0;
 }
 
 .data-table thead {
     display: block;
+    border-right: solid 2px black;
 }
 
-.data-table tbody {
-    display: block;
-    max-height: 180px;
-    overflow-y: auto;
+.data-table th, .data-table td {
+    width: 195px;
+}
+
+.data-table thead th {
+    border-top: solid 2px black;
+    border-bottom: solid 2px black;
+}
+
+.data-table thead th:first-child {
     border-right: solid 1px black;
 }
 
+.data-table tbody tr {
+    border-top: solid 1px black;
+}    
+
+.data-table tbody tr:first-child {
+    border-top: none;
+}
+
+.data-table td {
+    position: relative;
+    border-right: solid 1px black;
+}    
+
+/*.data-table td:first-child {
+    border-top: none;
+}*/
+
 .data-table input {
+    display: block;
     border: none;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 3px 0;
 }
 
 .data-row {
@@ -73,23 +102,44 @@ header {
 .delrow {
     visibility: hidden;
     position: absolute;
-    top: 3px;
-    right: 2px;
-    height: 17px;
-    width: 17px;
-    font-size: 0.8em;
-    background-color: darkred;
+    top: 1px;
+    right: 5px;
+    font-size: 1em;
     border: none;
-    border-radius: 50em;
+    /*border-radius: 50em;*/
+    background: transparent;
+    cursor: pointer;
 }
 
-.delrow::after {
+.data-table tfoot {
+    position: relative;
+}
+
+.data-table tfoot {
+    width: 50%;
+}
+
+.scrollrow {
+    height: 20px !important;
+    color: #fff;
+    background-color: #000;
+    z-index: 1000;
+}
+
+.scrollrow td {
+    width: 100%;
+    height: 20px !important;
+    padding: 0;
+    border: none;
+}
+
+/*.delrow::after {
     font-size: 0.8em;
     content: "🗑️";
     position: absolute;
     top: 2px;
     right: 2px;
-}
+}*/
 
 .data-row:hover .delrow {
     visibility: visible;

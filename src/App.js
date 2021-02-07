@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { DataGraph, DataTable, Header } from './components';
+import { DataTable, Header } from './components';
 
 function App() {
   const [rows, setRows] = React.useState([]);
@@ -12,7 +12,6 @@ function App() {
     <div className="App">
       <Header />
       <DataTable setStatus={setStatus} variables={variables} setVariables={setVariables} rows={rows} setRows={setRows} />
-      <DataGraph setStatus={setStatus} variables={variables} rows={rows} />
       {status && status.msg && (
           <div>
             <div className={`field-alert ${status.success ? "field-success" : "field-error"}`}>
